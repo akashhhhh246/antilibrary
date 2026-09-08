@@ -4,13 +4,15 @@ import {
   VolumeX, 
   Library, 
   Flame,
-  Trash2
+  Trash2,
+  Plus
 } from 'lucide-react';
 import { sounds } from '../utils/audio';
 
 interface NavbarProps {
   currentView: 'limbo' | 'eulogy' | 'stats';
   setCurrentView: (view: 'limbo' | 'eulogy' | 'stats') => void;
+  onOpenAddItem: () => void;
   onOpenReckoning: () => void;
   onOpenClearAll: () => void;
   limboCount: number;
@@ -23,6 +25,7 @@ interface NavbarProps {
 export const Navbar = ({
   currentView,
   setCurrentView,
+  onOpenAddItem,
   onOpenReckoning,
   onOpenClearAll,
   limboCount,
@@ -112,6 +115,19 @@ export const Navbar = ({
               className="p-2 text-stone-400 hover:text-stone-200 hover:bg-stone-800/80 rounded-lg transition-colors border border-transparent hover:border-stone-700"
             >
               {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4 text-stone-500" />}
+            </button>
+
+            {/* Add Item Button */}
+            <button
+              onClick={() => {
+                sounds.playClick();
+                onOpenAddItem();
+              }}
+              title="Add a new abandoned book, show, game, or project"
+              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-sm font-medium bg-stone-900 hover:bg-stone-800 text-stone-200 border border-stone-700/80 hover:border-amber-500/50 hover:text-amber-300 transition-all active:scale-95 shadow-sm"
+            >
+              <Plus className="w-4 h-4 text-amber-400" />
+              <span className="font-sans">Add Item</span>
             </button>
 
             {/* Sunday Reckoning Hero Button */}

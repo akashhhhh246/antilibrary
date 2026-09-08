@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { AbandonedItem } from './types';
+import type { AbandonedItem, Category } from './types';
 import { 
   getStoredItems, 
   saveItems, 
@@ -10,6 +10,7 @@ import {
 import { 
   checkBackendHealth, 
   fetchItemsApi, 
+  createItemApi,
   updateItemApi, 
   reviveItemApi, 
   declareDeadApi, 
@@ -20,6 +21,7 @@ import { sounds } from './utils/audio';
 import { Navbar } from './components/Navbar';
 import { ShelfOfLimbo } from './components/ShelfOfLimbo';
 import { EulogyRoom } from './components/EulogyRoom';
+import { AddItemModal } from './components/AddItemModal';
 import { EditItemModal } from './components/EditItemModal';
 import { SundayReckoningModal } from './components/SundayReckoningModal';
 import { DeclareDeadModal } from './components/DeclareDeadModal';
@@ -34,6 +36,7 @@ export function App() {
   const [isBackendConnected, setIsBackendConnected] = useState<boolean>(false);
   
   // Modals state
+  const [isAddItemOpen, setIsAddItemOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<AbandonedItem | null>(null);
 
   const [isReckoningOpen, setIsReckoningOpen] = useState(false);
@@ -95,6 +98,7 @@ export function App() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        setIsAddItemOpen(false);
         setEditingItem(null);
         setIsReckoningOpen(false);
         setIsDeclareDeadOpen(false);
@@ -109,6 +113,50 @@ export function App() {
   const stats = computeStats(items);
 
   // Handlers for item operations
+  const handleAddItem = async (data: {
+    title: string;
+    category: Category;
+    droppedAt: string;
+    abandonReason: string;
+    daysAgo?: number;
+  }) => {
+    const lingeringMs = (data.daysAgo || 0) * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    const newItem: AbandonedItem = {
+      id: `item-${now}-${Math.random().toString(36).slice(2, 7)}`,
+      title: data.title,
+      category: data.category,
+      droppedAt: data.droppedAt,
+      abandonReason: data.abandonReason,
+      dateAdded: now - lingeringMs,
+      lastInteractedAt: now,
+      status: 'In Limbo',
+      streakOrRevivalCount: 0
+    };
+
+    setItems((prev) => [newItem, ...prev]);
+
+    if (isBackendConnected) {
+      try {
+        const remoteCreated = await createItemApi({
+          title: data.title,
+          category: data.category,
+          droppedAt: data.droppedAt,
+          abandonReason: data.abandonReason
+        });
+        if (remoteCreated && remoteCreated.id) {
+          setItems((prev) =>
+            prev.map((it) => (it.id === newItem.id ? remoteCreated : it))
+          );
+        }
+      } catch (err) {
+        console.warn('Backend sync failed, stored locally:', err);
+      }
+    }
+
+    showToast(`Added "${data.title}" to Shelf of Limbo`);
+  };
+
   const handleSaveEditedItem = async (updatedItem: AbandonedItem) => {
     setItems((prev) =>
       prev.map((it) => (it.id === updatedItem.id ? updatedItem : it))
@@ -247,6 +295,7 @@ export function App() {
       <Navbar
         currentView={currentView}
         setCurrentView={setCurrentView}
+        onOpenAddItem={() => setIsAddItemOpen(true)}
         onOpenReckoning={() => setIsReckoningOpen(true)}
         onOpenClearAll={() => setIsClearAllOpen(true)}
         limboCount={stats.inLimboCount + stats.revivingCount}
@@ -261,6 +310,7 @@ export function App() {
         {currentView === 'limbo' && (
           <ShelfOfLimbo
             items={items}
+            onOpenAddItem={() => setIsAddItemOpen(true)}
             onOpenReckoning={() => setIsReckoningOpen(true)}
             onRevive={handleStartRevival}
             onDeclareDead={handleOpenDeclareDead}
@@ -283,6 +333,12 @@ export function App() {
       </main>
 
       {/* Modals */}
+      <AddItemModal
+        isOpen={isAddItemOpen}
+        onClose={() => setIsAddItemOpen(false)}
+        onAdd={handleAddItem}
+      />
+
       <EditItemModal
         isOpen={editingItem !== null}
         item={editingItem}

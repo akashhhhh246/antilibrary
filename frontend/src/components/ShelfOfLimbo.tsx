@@ -5,7 +5,8 @@ import {
   BookOpen, 
   Ghost,
   Flame,
-  Trash2
+  Trash2,
+  Plus
 } from 'lucide-react';
 import type { AbandonedItem, FilterCategory, SortOption } from '../types';
 import { ItemCard } from './ItemCard';
@@ -14,6 +15,7 @@ import { sounds } from '../utils/audio';
 
 interface ShelfOfLimboProps {
   items: AbandonedItem[];
+  onOpenAddItem: () => void;
   onOpenReckoning: () => void;
   onRevive: (item: AbandonedItem) => void;
   onDeclareDead: (item: AbandonedItem) => void;
@@ -35,6 +37,7 @@ const CATEGORY_TABS: { id: FilterCategory; label: string }[] = [
 
 export const ShelfOfLimbo = ({
   items,
+  onOpenAddItem,
   onOpenReckoning,
   onRevive,
   onDeclareDead,
@@ -118,6 +121,19 @@ export const ShelfOfLimbo = ({
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
+          {/* Add Item Button */}
+          <button
+            onClick={() => {
+              sounds.playClick();
+              onOpenAddItem();
+            }}
+            title="Add an unfinished book, game, show, or project"
+            className="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-2xl text-xs font-semibold bg-stone-800 hover:bg-stone-700 border border-stone-700 text-stone-200 hover:text-amber-300 transition-all active:scale-95 shadow-sm"
+          >
+            <Plus className="w-4 h-4 text-amber-400" />
+            <span>Add Item</span>
+          </button>
+
           {/* Sunday Reckoning Hero trigger */}
           <button
             onClick={() => {
@@ -254,6 +270,17 @@ export const ShelfOfLimbo = ({
               : 'Your shelf of limbo is clean and clear. No stalled ghosts haunting your mind.'}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={() => {
+                sounds.playClick();
+                onOpenAddItem();
+              }}
+              className="flex items-center space-x-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-stone-950 transition-all shadow-glow active:scale-95"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Your First Item</span>
+            </button>
+
             {activeItems.length > 0 && (
               <button
                 onClick={() => {
