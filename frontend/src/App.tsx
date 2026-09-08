@@ -311,7 +311,6 @@ export function App() {
           <ShelfOfLimbo
             items={items}
             onOpenAddItem={() => setIsAddItemOpen(true)}
-            onOpenReckoning={() => setIsReckoningOpen(true)}
             onRevive={handleStartRevival}
             onDeclareDead={handleOpenDeclareDead}
             onComplete={handleCompleteAccidentally}

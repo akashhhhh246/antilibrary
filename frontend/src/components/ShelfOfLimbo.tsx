@@ -4,7 +4,6 @@ import {
   ArrowUpDown, 
   BookOpen, 
   Ghost,
-  Flame,
   Trash2,
   Plus
 } from 'lucide-react';
@@ -16,7 +15,6 @@ import { sounds } from '../utils/audio';
 interface ShelfOfLimboProps {
   items: AbandonedItem[];
   onOpenAddItem: () => void;
-  onOpenReckoning: () => void;
   onRevive: (item: AbandonedItem) => void;
   onDeclareDead: (item: AbandonedItem) => void;
   onComplete: (item: AbandonedItem) => void;
@@ -38,7 +36,6 @@ const CATEGORY_TABS: { id: FilterCategory; label: string }[] = [
 export const ShelfOfLimbo = ({
   items,
   onOpenAddItem,
-  onOpenReckoning,
   onRevive,
   onDeclareDead,
   onComplete,
@@ -120,47 +117,19 @@ export const ShelfOfLimbo = ({
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          {/* Add Item Button */}
-          <button
-            onClick={() => {
-              sounds.playClick();
-              onOpenAddItem();
-            }}
-            title="Add an unfinished book, game, show, or project"
-            className="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-2xl text-xs font-semibold bg-stone-800 hover:bg-stone-700 border border-stone-700 text-stone-200 hover:text-amber-300 transition-all active:scale-95 shadow-sm"
-          >
-            <Plus className="w-4 h-4 text-amber-400" />
-            <span>Add Item</span>
-          </button>
-
-          {/* Sunday Reckoning Hero trigger */}
-          <button
-            onClick={() => {
-              sounds.playShuffle();
-              onOpenReckoning();
-            }}
-            title="Face a random stalled item"
-            className="flex items-center space-x-2 px-3.5 py-2.5 rounded-2xl text-xs font-semibold bg-gradient-to-r from-amber-600/30 to-amber-900/40 hover:from-amber-600/40 hover:to-amber-900/50 border border-amber-500/40 text-amber-300 transition-all active:scale-95 shadow-glow"
-          >
-            <Flame className="w-4 h-4 text-amber-400" />
-            <span>Face the Past</span>
-          </button>
-
-          {/* Hero Quick Insights Pill Box */}
-          <div className="flex items-center space-x-3 text-xs bg-stone-900/80 border border-stone-800 p-2.5 rounded-2xl shrink-0">
-            <div className="px-3 py-1 border-r border-stone-800 text-center">
-              <span className="block font-mono text-lg font-bold text-stone-200">{limboCount}</span>
-              <span className="text-[11px] text-stone-400">In Limbo</span>
-            </div>
-            <div className="px-3 py-1 border-r border-stone-800 text-center">
-              <span className="block font-mono text-lg font-bold text-emerald-400">{revivingCount}</span>
-              <span className="text-[11px] text-stone-400">Reviving</span>
-            </div>
-            <div className="px-3 py-1 text-center">
-              <span className="block font-mono text-lg font-bold text-amber-400">{longestDays}d</span>
-              <span className="text-[11px] text-stone-400">Max Lingering</span>
-            </div>
+        {/* Hero Quick Insights Pill Box */}
+        <div className="flex items-center space-x-3 text-xs bg-stone-900/80 border border-stone-800 p-2.5 rounded-2xl shrink-0">
+          <div className="px-3 py-1 border-r border-stone-800 text-center">
+            <span className="block font-mono text-lg font-bold text-stone-200">{limboCount}</span>
+            <span className="text-[11px] text-stone-400">In Limbo</span>
+          </div>
+          <div className="px-3 py-1 border-r border-stone-800 text-center">
+            <span className="block font-mono text-lg font-bold text-emerald-400">{revivingCount}</span>
+            <span className="text-[11px] text-stone-400">Reviving</span>
+          </div>
+          <div className="px-3 py-1 text-center">
+            <span className="block font-mono text-lg font-bold text-amber-400">{longestDays}d</span>
+            <span className="text-[11px] text-stone-400">Max Lingering</span>
           </div>
         </div>
       </div>
@@ -248,6 +217,19 @@ export const ShelfOfLimbo = ({
                 <span className="hidden sm:inline">Delete All</span>
               </button>
             )}
+
+            {/* In-shelf Add Item button */}
+            <button
+              onClick={() => {
+                sounds.playClick();
+                onOpenAddItem();
+              }}
+              className="flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300 transition-all shadow-sm active:scale-95"
+              title="Add a new abandoned item"
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>Add Item</span>
+            </button>
           </div>
         </div>
 

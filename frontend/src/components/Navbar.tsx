@@ -142,9 +142,9 @@ export const Navbar = ({
               <Flame className="w-4 h-4 animate-bounce" />
               <span className="hidden md:inline font-sans">Face the Past</span>
               <span className="md:hidden">Face</span>
-              <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+              <span className="relative flex h-2 w-2 ml-0.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-stone-950 opacity-60"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-stone-900"></span>
               </span>
             </button>
 
