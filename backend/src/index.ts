@@ -1,7 +1,14 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
 import { storage } from './storage.js';
 import type { AbandonedItem, Category, AbandonStatus } from './types.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const frontendDist = path.resolve(__dirname, '../../frontend/dist');
 
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 5000;
@@ -163,6 +170,17 @@ app.get('/api/backup/export', (_req, res) => {
   res.setHeader('Content-Disposition', `attachment; filename=anti_library_export_${new Date().toISOString().slice(0, 10)}.json`);
   res.send(JSON.stringify(items, null, 2));
 });
+
+// Serve frontend build in production
+if (fs.existsSync(frontendDist)) {
+  app.use(express.static(frontendDist));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return next();
+    }
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`✨ Anti-Library Backend Server is running on http://localhost:${PORT}`);

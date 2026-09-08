@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "build": "cd backend && npm install && npm run build && cd ../frontend && npm install && npm run build",
+    "start": "cd backend && npm start",
     "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm run dev",
-    "build:backend": "cd backend && npm run build",
-    "build:frontend": "cd frontend && npm run build",
-    "build": "npm run build:backend && npm run build:frontend"
+    "dev:frontend": "cd frontend && npm run dev"
   }
 }
