@@ -28,7 +28,6 @@ import { DeclareDeadModal } from './components/DeclareDeadModal';
 import { RevivalTimerModal } from './components/RevivalTimerModal';
 import { ClearAllModal } from './components/ClearAllModal';
 import confetti from 'canvas-confetti';
-import { Server, Database } from 'lucide-react';
 
 export function App() {
   const [items, setItems] = useState<AbandonedItem[]>(() => getStoredItems());
@@ -383,24 +382,11 @@ export function App() {
 
 
 
-      {/* Footer & Connection Status */}
-      <footer className="border-t border-stone-800/60 py-6 px-4 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-400 font-mono max-w-7xl mx-auto w-full gap-3">
+      {/* Footer */}
+      <footer className="border-t border-stone-800/60 py-6 px-4 flex items-center justify-center text-xs text-stone-400 font-mono max-w-7xl mx-auto w-full text-center">
         <p>
           Anti-Library • Most apps celebrate what you finish; we celebrate what you guiltlessly let go.
         </p>
-        <div className="flex items-center space-x-2">
-          {isBackendConnected ? (
-            <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[11px] bg-emerald-950/60 text-emerald-400 border border-emerald-800/50">
-              <Server className="w-3 h-3" />
-              <span>Backend Connected (:5000)</span>
-            </span>
-          ) : (
-            <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[11px] bg-stone-900 text-stone-400 border border-stone-800">
-              <Database className="w-3 h-3 text-amber-500/70" />
-              <span>Offline Local Storage</span>
-            </span>
-          )}
-        </div>
       </footer>
 
     </div>
